@@ -33,7 +33,14 @@ export class EntryService {
   async saveEntry(entry: Omit<Entry, 'id' | 'net'>): Promise<void> {
     const net = entry.income - entry.expenses;
     const docRef = doc(this.entriesRef(), entry.date);
-    await setDoc(docRef, { ...entry, net });
+    await setDoc(docRef, {
+      date: entry.date,
+      income: entry.income,
+      incomeDescription: entry.incomeDescription,
+      expenses: entry.expenses,
+      expenseDescription: entry.expenseDescription,
+      net,
+    });
     await this.loadEntries();
   }
 

@@ -26,7 +26,7 @@ interface MonthGroup {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="monthly">
-      <h1>Monthly Summary</h1>
+      <h1>თვიური შეჯამება</h1>
 
       @if (loading()) {
         <div class="center">
@@ -37,26 +37,26 @@ interface MonthGroup {
           <mat-card class="current-month-card">
             <mat-card-header>
               <mat-card-title>{{ month.label }}</mat-card-title>
-              <mat-card-subtitle>Current Month</mat-card-subtitle>
+              <mat-card-subtitle>მიმდინარე თვე</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
               <div class="stat-grid">
                 <div class="stat">
-                  <span class="stat-label">Income</span>
-                  <span class="stat-value income">{{ month.totalIncome | currency }}</span>
+                  <span class="stat-label">შემოსავალი</span>
+                  <span class="stat-value income">{{ month.totalIncome | currency:'GEL':'symbol-narrow':'1.2-2' }}</span>
                 </div>
                 <div class="stat">
-                  <span class="stat-label">Expenses</span>
-                  <span class="stat-value expenses">{{ month.totalExpenses | currency }}</span>
+                  <span class="stat-label">ხარჯი</span>
+                  <span class="stat-value expenses">{{ month.totalExpenses | currency:'GEL':'symbol-narrow':'1.2-2' }}</span>
                 </div>
                 <div class="stat">
-                  <span class="stat-label">Net Income</span>
+                  <span class="stat-label">წმინდა შემოსავალი</span>
                   <span class="stat-value" [class.positive]="month.totalNet >= 0" [class.negative]="month.totalNet < 0">
-                    {{ month.totalNet | currency }}
+                    {{ month.totalNet | currency:'GEL':'symbol-narrow':'1.2-2' }}
                   </span>
                 </div>
                 <div class="stat">
-                  <span class="stat-label">Entries</span>
+                  <span class="stat-label">ჩანაწერები</span>
                   <span class="stat-value">{{ month.entryCount }}</span>
                 </div>
               </div>
@@ -65,28 +65,28 @@ interface MonthGroup {
         }
 
         @if (pastMonths().length > 0) {
-          <h2>Archive</h2>
+          <h2>არქივი</h2>
           @for (month of pastMonths(); track month.key) {
             <mat-card class="archive-card">
               <mat-card-content>
                 <div class="archive-header">
                   <span class="archive-label">{{ month.label }}</span>
-                  <span class="archive-entries">{{ month.entryCount }} entries</span>
+                  <span class="archive-entries">{{ month.entryCount }} ჩანაწერი</span>
                 </div>
                 <mat-divider />
                 <div class="stat-row">
                   <div class="stat-item">
-                    <span class="stat-label">Income</span>
-                    <span class="income">{{ month.totalIncome | currency }}</span>
+                    <span class="stat-label">შემოსავალი</span>
+                    <span class="income">{{ month.totalIncome | currency:'GEL':'symbol-narrow':'1.2-2' }}</span>
                   </div>
                   <div class="stat-item">
-                    <span class="stat-label">Expenses</span>
-                    <span class="expenses">{{ month.totalExpenses | currency }}</span>
+                    <span class="stat-label">ხარჯი</span>
+                    <span class="expenses">{{ month.totalExpenses | currency:'GEL':'symbol-narrow':'1.2-2' }}</span>
                   </div>
                   <div class="stat-item">
-                    <span class="stat-label">Net</span>
+                    <span class="stat-label">წმინდა</span>
                     <span [class.positive]="month.totalNet >= 0" [class.negative]="month.totalNet < 0">
-                      {{ month.totalNet | currency }}
+                      {{ month.totalNet | currency:'GEL':'symbol-narrow':'1.2-2' }}
                     </span>
                   </div>
                 </div>
@@ -96,7 +96,7 @@ interface MonthGroup {
         } @else if (!currentMonth()) {
           <mat-card>
             <mat-card-content>
-              <p class="empty">No entries yet.</p>
+              <p class="empty">ჩანაწერები არ არის.</p>
             </mat-card-content>
           </mat-card>
         }
@@ -174,7 +174,7 @@ export class MonthlyComponent implements OnInit {
     for (const entry of entries) {
       const key = entry.date.slice(0, 7); // YYYY-MM
       const [year, month] = key.split('-');
-      const label = new Date(+year, +month - 1).toLocaleDateString('en-US', {
+      const label = new Date(+year, +month - 1).toLocaleDateString('ka-GE', {
         year: 'numeric',
         month: 'long',
       });

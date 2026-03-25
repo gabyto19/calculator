@@ -20,14 +20,14 @@ import { AuthService } from './services/auth.service';
   template: `
     @if (auth.isAuthenticated()) {
       <mat-toolbar color="primary" class="toolbar">
-        <span class="app-title">💰 Finance Tracker</span>
+        <span class="app-title">💰 ფინანსები</span>
         <nav class="nav-links">
-          <a mat-button routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-          <a mat-button routerLink="/history" routerLinkActive="active">History</a>
-          <a mat-button routerLink="/monthly" routerLinkActive="active">Monthly</a>
+          <a mat-button routerLink="/dashboard" routerLinkActive="active">მთავარი</a>
+          <a mat-button routerLink="/history" routerLinkActive="active">ისტორია</a>
+          <a mat-button routerLink="/monthly" routerLinkActive="active">თვიური</a>
         </nav>
         <span class="spacer"></span>
-        <button mat-icon-button (click)="onLogout()" aria-label="Logout">
+        <button mat-icon-button (click)="onLogout()" aria-label="გასვლა">
           <mat-icon>logout</mat-icon>
         </button>
       </mat-toolbar>

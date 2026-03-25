@@ -19,7 +19,7 @@ import { Entry } from '../../models/entry.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="history">
-      <h1>History</h1>
+      <h1>ისტორია</h1>
 
       @if (loading()) {
         <div class="center">
@@ -30,8 +30,8 @@ import { Entry } from '../../models/entry.model';
           <mat-card class="summary-card">
             <mat-card-content>
               <div class="summary-row">
-                <span>This Week's Income</span>
-                <span class="summary-value">{{ weeklyTotal() | currency }}</span>
+                <span>ამ კვირის შემოსავალი</span>
+                <span class="summary-value">{{ weeklyTotal() | currency:'GEL':'symbol-narrow':'1.2-2' }}</span>
               </div>
             </mat-card-content>
           </mat-card>
@@ -40,39 +40,51 @@ import { Entry } from '../../models/entry.model';
         @if (entries().length === 0) {
           <mat-card>
             <mat-card-content>
-              <p class="empty">No entries yet. Start by adding today's data on the Dashboard.</p>
+              <p class="empty">ჩანაწერები არ არის. დაიწყეთ დღევანდელი მონაცემების დამატება მთავარ გვერდზე.</p>
             </mat-card-content>
           </mat-card>
         } @else {
-          <mat-card>
-            <table mat-table [dataSource]="entries()" class="full-width">
-              <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef>Date</th>
-                <td mat-cell *matCellDef="let row">{{ row.date | date:'mediumDate' }}</td>
-              </ng-container>
+          <mat-card class="table-card">
+            <div class="table-scroll">
+              <table mat-table [dataSource]="entries()" class="full-width">
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef>თარიღი</th>
+                  <td mat-cell *matCellDef="let row">{{ row.date | date:'mediumDate' }}</td>
+                </ng-container>
 
-              <ng-container matColumnDef="income">
-                <th mat-header-cell *matHeaderCellDef>Income</th>
-                <td mat-cell *matCellDef="let row">{{ row.income | currency }}</td>
-              </ng-container>
+                <ng-container matColumnDef="income">
+                  <th mat-header-cell *matHeaderCellDef>შემოსავალი</th>
+                  <td mat-cell *matCellDef="let row">
+                    {{ row.income | currency:'GEL':'symbol-narrow':'1.2-2' }}
+                    @if (row.incomeDescription) {
+                      <div class="desc">{{ row.incomeDescription }}</div>
+                    }
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="expenses">
-                <th mat-header-cell *matHeaderCellDef>Expenses</th>
-                <td mat-cell *matCellDef="let row">{{ row.expenses | currency }}</td>
-              </ng-container>
+                <ng-container matColumnDef="expenses">
+                  <th mat-header-cell *matHeaderCellDef>ხარჯი</th>
+                  <td mat-cell *matCellDef="let row">
+                    {{ row.expenses | currency:'GEL':'symbol-narrow':'1.2-2' }}
+                    @if (row.expenseDescription) {
+                      <div class="desc">{{ row.expenseDescription }}</div>
+                    }
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="net">
-                <th mat-header-cell *matHeaderCellDef>Net</th>
-                <td mat-cell *matCellDef="let row"
-                    [class.positive]="row.net >= 0"
-                    [class.negative]="row.net < 0">
-                  {{ row.net | currency }}
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="net">
+                  <th mat-header-cell *matHeaderCellDef>წმინდა</th>
+                  <td mat-cell *matCellDef="let row"
+                      [class.positive]="row.net >= 0"
+                      [class.negative]="row.net < 0">
+                    {{ row.net | currency:'GEL':'symbol-narrow':'1.2-2' }}
+                  </td>
+                </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
           </mat-card>
         }
       }
@@ -101,6 +113,9 @@ import { Entry } from '../../models/entry.model';
     .full-width { width: 100%; }
     .positive { color: #2e7d32; font-weight: 500; }
     .negative { color: #c62828; font-weight: 500; }
+    .desc { font-size: 12px; color: #888; margin-top: 2px; }
+    .table-scroll { overflow-x: auto; }
+    .table-card { overflow: hidden; }
     .empty { text-align: center; color: #666; padding: 24px 0; }
     .center { display: flex; justify-content: center; padding: 32px; }
   `],

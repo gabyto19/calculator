@@ -25,7 +25,7 @@ import { EntryService } from '../../services/entry.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="dashboard">
-      <h1>Dashboard</h1>
+      <h1>მთავარი</h1>
       <p class="date-label">{{ todayFormatted }}</p>
 
       @if (loading()) {
@@ -35,25 +35,35 @@ import { EntryService } from '../../services/entry.service';
       } @else {
         <mat-card class="entry-card">
           <mat-card-header>
-            <mat-card-title>Today's Entry</mat-card-title>
+            <mat-card-title>დღევანდელი ჩანაწერი</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <form (ngSubmit)="onSave()" class="entry-form">
               <mat-form-field appearance="outline">
-                <mat-label>Income</mat-label>
+                <mat-label>შემოსავალი</mat-label>
                 <input matInput type="number" [(ngModel)]="income" name="income" min="0" step="0.01" required />
-                <span matPrefix>$&nbsp;</span>
+                <span matPrefix>₾&nbsp;</span>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Expenses</mat-label>
+                <mat-label>შემოსავლის აღწერა</mat-label>
+                <input matInput type="text" [(ngModel)]="incomeDescription" name="incomeDescription" placeholder="მაგ: ხელფასი, ფრილანსი..." />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>ხარჯი</mat-label>
                 <input matInput type="number" [(ngModel)]="expenses" name="expenses" min="0" step="0.01" required />
-                <span matPrefix>$&nbsp;</span>
+                <span matPrefix>₾&nbsp;</span>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>ხარჯის აღწერა</mat-label>
+                <input matInput type="text" [(ngModel)]="expenseDescription" name="expenseDescription" placeholder="მაგ: საკვები, ტრანსპორტი..." />
               </mat-form-field>
 
               <div class="net-display" [class.positive]="netIncome() >= 0" [class.negative]="netIncome() < 0">
-                <span class="net-label">Net Income</span>
-                <span class="net-value">{{ netIncome() | currency }}</span>
+                <span class="net-label">წმინდა შემოსავალი</span>
+                <span class="net-value">{{ netIncome() | currency:'GEL':'symbol-narrow':'1.2-2' }}</span>
               </div>
 
               @if (error()) {
@@ -64,7 +74,7 @@ import { EntryService } from '../../services/entry.service';
                 @if (saving()) {
                   <mat-spinner diameter="20" />
                 } @else {
-                  {{ hasExisting() ? 'Update' : 'Save' }}
+                  {{ hasExisting() ? 'განახლება' : 'შენახვა' }}
                 }
               </button>
             </form>
@@ -112,7 +122,9 @@ export class DashboardComponent implements OnInit {
   private readonly entryService = inject(EntryService);
 
   income = 0;
+  incomeDescription = '';
   expenses = 0;
+  expenseDescription = '';
   loading = signal(true);
   saving = signal(false);
   error = signal('');
@@ -121,7 +133,7 @@ export class DashboardComponent implements OnInit {
   netIncome = computed(() => this.income - this.expenses);
 
   today = new Date().toISOString().slice(0, 10);
-  todayFormatted = new Date().toLocaleDateString('en-US', {
+  todayFormatted = new Date().toLocaleDateString('ka-GE', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -134,7 +146,9 @@ export class DashboardComponent implements OnInit {
       const existing = this.entryService.getTodayEntry();
       if (existing) {
         this.income = existing.income;
+        this.incomeDescription = existing.incomeDescription || '';
         this.expenses = existing.expenses;
+        this.expenseDescription = existing.expenseDescription || '';
         this.hasExisting.set(true);
       }
     } finally {
@@ -149,11 +163,13 @@ export class DashboardComponent implements OnInit {
       await this.entryService.saveEntry({
         date: this.today,
         income: this.income,
+        incomeDescription: this.incomeDescription,
         expenses: this.expenses,
+        expenseDescription: this.expenseDescription,
       });
       this.hasExisting.set(true);
     } catch (e: any) {
-      this.error.set(e.message ?? 'Failed to save');
+      this.error.set(e.message ?? 'შენახვა ვერ მოხერხდა');
     } finally {
       this.saving.set(false);
     }

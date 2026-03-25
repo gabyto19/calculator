@@ -27,22 +27,22 @@ import { AuthService } from '../../services/auth.service';
     <div class="auth-container">
       <mat-card class="auth-card">
         <mat-card-header>
-          <mat-card-title>Finance Tracker</mat-card-title>
+          <mat-card-title>ფინანსების მენეჯერი</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <mat-tab-group (selectedIndexChange)="activeTab.set($event)">
-            <mat-tab label="Login"></mat-tab>
-            <mat-tab label="Register"></mat-tab>
+            <mat-tab label="შესვლა"></mat-tab>
+            <mat-tab label="რეგისტრაცია"></mat-tab>
           </mat-tab-group>
 
           <form (ngSubmit)="onSubmit()" class="auth-form">
             <mat-form-field appearance="outline">
-              <mat-label>Email</mat-label>
+              <mat-label>ელ. ფოსტა</mat-label>
               <input matInput type="email" [(ngModel)]="email" name="email" required />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Password</mat-label>
+              <mat-label>პაროლი</mat-label>
               <input matInput type="password" [(ngModel)]="password" name="password" required />
             </mat-form-field>
 
@@ -54,7 +54,7 @@ import { AuthService } from '../../services/auth.service';
               @if (submitting()) {
                 <mat-spinner diameter="20" />
               } @else {
-                {{ activeTab() === 0 ? 'Login' : 'Register' }}
+                {{ activeTab() === 0 ? 'შესვლა' : 'რეგისტრაცია' }}
               }
             </button>
           </form>
@@ -112,7 +112,7 @@ export class LoginComponent {
       }
       this.router.navigate(['/dashboard']);
     } catch (e: any) {
-      this.error.set(e.message ?? 'Authentication failed');
+      this.error.set(e.message ?? 'ავტორიზაცია ვერ მოხერხდა');
     } finally {
       this.submitting.set(false);
     }
