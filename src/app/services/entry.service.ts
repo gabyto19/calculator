@@ -45,9 +45,11 @@ export class EntryService {
   }
 
   async loadEntries(): Promise<void> {
-    const q = query(this.entriesRef(), orderBy('date', 'desc'), orderBy('createdAt', 'desc'));
+    const q = query(this.entriesRef(), orderBy('createdAt', 'desc'));
     const snapshot = await getDocs(q);
     const entries = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Entry));
+    // Sort by date desc, then by createdAt desc within same date
+    entries.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt);
     this.entries.set(entries);
   }
 
