@@ -1,9 +1,17 @@
 export interface Entry {
   id?: string;
-  date: string;       // ISO date string YYYY-MM-DD
+  date: string;            // ISO date string YYYY-MM-DD
+  serviceName: string;     // e.g. "თმის შეჭრა", "მანიკური"
   income: number;
-  incomeDescription: string;
   expenses: number;
-  expenseDescription: string;
   net: number;
+  createdAt: number;       // timestamp for ordering within a day
+}
+
+export interface DayGroup {
+  date: string;
+  entries: Entry[];
+  totalIncome: number;
+  totalExpenses: number;
+  totalNet: number;
 }
